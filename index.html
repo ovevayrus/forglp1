@@ -242,11 +242,11 @@ table.hist tr:first-child td{border-top:0}
 .del:hover{color:var(--act);background:var(--act-bg)}
 
 /* onboarding */
-.onb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);min-height:100%}
+.onb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);min-height:100vh;min-height:100dvh}
 @media (max-width:900px){.onb{grid-template-columns:1fr}}
 .onb-l{background:var(--brand);color:#fff;padding-block:40px;padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:40px;display:flex;flex-direction:column;justify-content:center;gap:28px}
 .onb-l>.logo{position:absolute;top:40px}
-.onb-l{position:relative}
+.onb-l{position:relative;padding-top:88px}
 @media (max-width:900px){.onb-l>.logo{position:static}}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .onb-l{background:#0F2A2C}}
 :root[data-theme="dark"] .onb-l{background:#0F2A2C}
