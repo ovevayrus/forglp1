@@ -1,0 +1,874 @@
+<title>Landing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: product app shell. Fixed left nav on desktop, bottom tab bar on phones; content views: Overview, Plan, Coach, Weigh-ins. */
+:root{
+  --bg:#F7F8F8; --surface:#FFFFFF; --sunk:#F1F3F3; --ink:#111A1C; --ink2:#3C4A4E; --muted:#6B7A7E; --line:#E3E7E8; --line2:#D2D8DA;
+  --brand:#0E5A5F; --brand-ink:#FFFFFF; --brand-tint:#E6F0F0;
+  --hold:#2F7A5B; --hold-bg:#E7F2EC; --drift:#B4691F; --drift-bg:#FBF1E5; --act:#B0413A; --act-bg:#F9E7E5;
+  --sans:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"Geist Mono",ui-monospace,"SF Mono",monospace;
+  --nav-h:62px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C1214; --surface:#121A1D; --sunk:#0F1618; --ink:#E8EEEF; --ink2:#C2CCCE; --muted:#8C9A9E; --line:#1F2A2D; --line2:#2B383C;
+  --brand:#5FB7BC; --brand-ink:#0C1214; --brand-tint:#16292B;
+  --hold:#6FC59D; --hold-bg:#142A20; --drift:#E7A866; --drift-bg:#2E2316; --act:#EC8E86; --act-bg:#331C1A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1214; --surface:#121A1D; --sunk:#0F1618; --ink:#E8EEEF; --ink2:#C2CCCE; --muted:#8C9A9E; --line:#1F2A2D; --line2:#2B383C;
+  --brand:#5FB7BC; --brand-ink:#0C1214; --brand-tint:#16292B;
+  --hold:#6FC59D; --hold-bg:#142A20; --drift:#E7A866; --drift-bg:#2E2316; --act:#EC8E86; --act-bg:#331C1A; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01"}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* shell */
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100%}
+.side{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;padding:20px 14px 18px max(14px,env(safe-area-inset-left,0px))}
+.logo{display:flex;align-items:center;gap:9px;padding:2px 8px 22px;font-weight:600;font-size:16px;letter-spacing:-.01em}
+.logo svg{flex:none}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-radius:6px;padding:8px 10px;color:var(--ink2);cursor:pointer;font-size:14px}
+.nav button:hover{background:var(--sunk)}
+.nav button[aria-current="page"]{background:var(--brand-tint);color:var(--brand);font-weight:600}
+.nav svg{width:16px;height:16px;flex:none}
+.side-foot{margin-top:auto;padding:12px 10px 0;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+.side-foot button{background:none;border:0;padding:0;color:var(--muted);cursor:pointer;text-align:left;font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.main{min-width:0;display:flex;flex-direction:column}
+.banner{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;background:var(--ink);color:var(--surface);font-size:13px;padding-block:8px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+.banner button{background:none;border:0;color:inherit;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0}
+.content{width:100%;max-width:1040px;padding-block:28px 64px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+.pagehead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:24px}
+.pagehead h1{font-size:24px;font-weight:600;letter-spacing:-.02em;margin:0;line-height:1.2}
+.pagehead p{margin:4px 0 0;color:var(--muted)}
+.tabbar{display:none}
+.mobile-top{display:none}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{display:none}
+  .content{padding-block:18px calc(var(--nav-h) + 40px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .banner{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .mobile-top{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);background:var(--surface);padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .tabbar{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  .tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:var(--nav-h);background:none;border:0;color:var(--muted);font-size:10.5px;min-width:0;cursor:pointer}
+  .tabbar button[aria-current="page"]{color:var(--brand);font-weight:600}
+  .tabbar svg{width:20px;height:20px}
+  .pagehead h1{font-size:21px}
+}
+
+/* primitives */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;min-width:0}
+.panel-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.panel-h h2{font-size:14px;font-weight:600;margin:0}
+.panel-h .aside{font-size:12.5px;color:var(--muted)}
+.panel-b{padding:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:500;font-size:14px;background:var(--brand);color:var(--brand-ink);border:1px solid var(--brand);border-radius:6px;padding:8px 14px;cursor:pointer;white-space:nowrap}
+.btn:hover{filter:brightness(1.07)}
+.btn.sec{background:var(--surface);color:var(--ink);border-color:var(--line2)}
+.btn.sec:hover{background:var(--sunk);filter:none}
+.btn[disabled]{opacity:.45;cursor:default;filter:none}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:var(--ink2)}
+input,select,textarea{font:inherit;font-size:14.5px;color:var(--ink);background:var(--surface);border:1px solid var(--line2);border-radius:6px;padding:8px 10px;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-tint)}
+.suffix{position:relative}.suffix input{padding-right:34px}.suffix i{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-style:normal;font-size:12.5px;color:var(--muted);pointer-events:none}
+.hint{font-size:12.5px;color:var(--muted)}
+.err{font-size:13px;color:var(--act);min-height:1.2em;margin:0}
+.ok{font-size:13px;color:var(--hold);min-height:1.2em;margin:0}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.dot.hold{background:var(--hold)}.dot.drift{background:var(--drift)}.dot.act{background:var(--act)}
+
+/* overview */
+.ov{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media (max-width:1000px){.ov{grid-template-columns:1fr}}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line)}
+.summary>div{padding:16px 18px;border-left:1px solid var(--line)}
+.summary>div:first-child{border-left:0}
+.summary .k{font-size:12px;color:var(--muted)}
+.summary .v{font-size:22px;font-weight:500;margin-top:2px}
+.summary .v small{font-size:12px;color:var(--muted);font-family:var(--sans);margin-left:3px}
+@media (max-width:560px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.summary>div:nth-child(3){border-left:0}.summary>div:nth-child(n+3){border-top:1px solid var(--line)}.summary .v{font-size:19px}}
+.statusline{display:flex;gap:12px;align-items:flex-start;padding:16px 18px;border-bottom:1px solid var(--line)}
+.statusline .label{font-weight:600}
+.statusline p{margin:2px 0 0;color:var(--ink2);max-width:68ch}
+.statusline.hold{background:var(--hold-bg)}.statusline.drift{background:var(--drift-bg)}.statusline.act{background:var(--act-bg)}
+.chart-box{padding:12px 10px 6px 4px}
+svg.chart{display:block;width:100%;height:auto}
+.chart-key{display:flex;flex-wrap:wrap;gap:16px;padding:0 18px 14px;font-size:12px;color:var(--muted)}
+.chart-key span{display:inline-flex;align-items:center;gap:6px}
+.quicklog{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr) auto;gap:10px;align-items:end}
+@media (max-width:640px){.quicklog{grid-template-columns:1fr 1fr}.quicklog .btn,.quicklog .full{grid-column:1/-1}}
+.todo{list-style:none;margin:0;padding:0}
+.todo li+li{border-top:1px solid var(--line)}
+.todo label{display:grid;grid-template-columns:20px minmax(0,1fr);gap:10px;align-items:start;padding:12px 18px;cursor:pointer}
+.todo input{width:16px;height:16px;margin:2px 0 0;accent-color:var(--brand)}
+.todo b{font-weight:500;display:block}
+.todo span{font-size:12.5px;color:var(--muted)}
+.todo input:checked+div b{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line2)}
+.meter{height:4px;background:var(--sunk);border-radius:2px;overflow:hidden;width:90px}
+.meter i{display:block;height:100%;background:var(--brand)}
+.kv{display:flex;flex-direction:column}
+.kv div{display:flex;justify-content:space-between;gap:12px;padding:10px 18px;border-top:1px solid var(--line);font-size:13.5px}
+.kv div:first-child{border-top:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;text-align:right}
+
+/* plan */
+.plan{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.plan{grid-template-columns:1fr}}
+.plan .wide{grid-column:1/-1}
+.prose{color:var(--ink2);margin:0;max-width:68ch}
+.target{display:flex;align-items:baseline;gap:8px;margin:2px 0 8px}
+.target .num{font-size:28px;font-weight:500}
+table.prog{width:100%;border-collapse:collapse;font-size:13.5px}
+table.prog th,table.prog td{text-align:left;padding:9px 18px;border-top:1px solid var(--line);vertical-align:top}
+table.prog th{font-size:12px;font-weight:500;color:var(--muted);background:var(--sunk);border-top:0}
+table.prog td:first-child{width:72px;font-weight:600;color:var(--brand)}
+.tablewrap{overflow-x:auto}
+ol.steps{margin:0;padding:0 18px 4px 36px}
+ol.steps li{padding:6px 0;color:var(--ink2)}
+ol.steps li::marker{color:var(--muted);font-family:var(--mono);font-size:12px}
+.reset-box{border-color:color-mix(in srgb,var(--drift) 45%,var(--line))}
+.reset-box.act{border-color:color-mix(in srgb,var(--act) 45%,var(--line))}
+
+/* coach */
+.coach{display:grid;grid-template-rows:minmax(0,1fr) auto;height:min(640px,calc(100vh - 180px));min-height:420px}
+.thread{overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.turn{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;max-width:720px}
+.av{width:28px;height:28px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:600}
+.av.ai{background:var(--brand-tint);color:var(--brand)}
+.av.me{background:var(--sunk);color:var(--ink2)}
+.turn .who{font-size:12px;color:var(--muted);margin-bottom:2px}
+.turn .txt{white-space:pre-wrap;color:var(--ink)}
+.composer{border-top:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.sugg{display:flex;flex-wrap:wrap;gap:6px}
+.sugg button{background:var(--surface);border:1px solid var(--line2);border-radius:6px;padding:5px 10px;font-size:13px;color:var(--ink2);cursor:pointer}
+.sugg button:hover{background:var(--sunk)}
+.composer form{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{resize:none;min-height:40px;max-height:140px}
+
+/* photos */
+.snap{background:var(--sunk);aspect-ratio:4/5;max-width:100%;display:grid;place-items:center;overflow:hidden;border-bottom:1px solid var(--line)}
+.snap img{width:100%;height:100%;object-fit:cover;display:block}
+.snap-empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px;text-align:center;color:var(--muted);font-size:13px}
+.snap-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--line)}
+.iconbtn{background:var(--surface);border:1px solid var(--line2);border-radius:6px;width:32px;height:30px;cursor:pointer;color:var(--ink2);display:grid;place-items:center}
+.iconbtn:hover{background:var(--sunk)}
+.iconbtn[disabled]{opacity:.35;cursor:default}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);max-width:720px}
+.cmp-panel{max-width:722px}
+.compare figure{margin:0;background:var(--surface);display:flex;flex-direction:column;min-width:0}
+.compare .ph{aspect-ratio:4/5;background:var(--sunk);overflow:hidden}
+.compare img{width:100%;height:100%;object-fit:cover;display:block}
+.compare figcaption{padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.compare select{font-size:13px;padding:6px 8px}
+.cmp-sum{padding:12px 18px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:18px}
+.tile{display:flex;flex-direction:column;gap:6px;min-width:0}
+.tile .ph{aspect-ratio:4/5;border-radius:6px;overflow:hidden;background:var(--sunk);border:1px solid var(--line);cursor:pointer;padding:0}
+.tile .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.tile .meta{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:12.5px}
+.tile.add .ph{border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:12.5px;cursor:default;padding:12px}
+.tile.add input[type=date]{font-size:12.5px;padding:5px 6px}
+.privacy{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--muted);padding:12px 18px;border-top:1px solid var(--line)}
+.thumb{width:28px;height:35px;border-radius:3px;object-fit:cover;vertical-align:middle;border:1px solid var(--line)}
+svg.chart .hit{cursor:pointer}
+
+/* coverage */
+.count{display:flex;align-items:baseline;gap:10px;padding:18px;border-bottom:1px solid var(--line)}
+.count>.num{font-size:44px;font-weight:500;line-height:1;letter-spacing:-.03em}
+.count p{margin:0;color:var(--ink2)}
+.prices{width:100%;border-collapse:collapse;font-size:13.5px}
+.prices th{font-size:12px;font-weight:500;color:var(--muted);text-align:left;padding:9px 18px;background:var(--sunk);border-bottom:1px solid var(--line)}
+.prices td{padding:10px 18px;border-top:1px solid var(--line);vertical-align:top}
+.prices tr:first-child td{border-top:0}
+.prices td.r,.prices th.r{text-align:right;white-space:nowrap}
+.prices tr.mine td{background:var(--brand-tint)}
+.prices .grp td{background:var(--sunk);font-weight:600;font-size:12.5px;color:var(--ink2);padding-block:7px}
+.callout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 18px;align-items:end;padding:18px;border-bottom:1px solid var(--line)}
+.callout .num{font-size:30px;font-weight:500;letter-spacing:-.02em}
+.notes{font-size:12.5px;color:var(--muted);padding:12px 18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.notes a{color:var(--muted)}
+.qs{margin:0;padding:14px 18px 6px 38px}
+.qs li{padding:4px 0;color:var(--ink2)}
+.lastdose{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:end}
+@media (max-width:560px){.lastdose{grid-template-columns:1fr 1fr}.lastdose .btn{grid-column:1/-1}}
+.sample-links{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.employer{margin-top:4px;padding:14px 16px;border:1px solid rgba(255,255,255,.22);border-radius:8px;font-size:13px;color:rgba(255,255,255,.82);max-width:520px}
+.employer b{color:#fff;font-weight:600}
+
+/* history */
+table.hist{width:100%;border-collapse:collapse;font-size:14px}
+table.hist th{font-size:12px;font-weight:500;color:var(--muted);text-align:right;padding:10px 18px;background:var(--sunk);border-bottom:1px solid var(--line)}
+table.hist th:first-child,table.hist td:first-child{text-align:left}
+table.hist td{padding:11px 18px;border-top:1px solid var(--line);text-align:right}
+table.hist tr:first-child td{border-top:0}
+.up{color:var(--drift)}.down{color:var(--hold)}
+.del{background:none;border:0;color:var(--muted);cursor:pointer;font-size:12.5px;padding:2px 6px;border-radius:4px}
+.del:hover{color:var(--act);background:var(--act-bg)}
+
+/* onboarding */
+.onb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);min-height:100%}
+@media (max-width:900px){.onb{grid-template-columns:1fr}}
+.onb-l{background:var(--brand);color:#fff;padding-block:40px;padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:40px;display:flex;flex-direction:column;justify-content:center;gap:28px}
+.onb-l>.logo{position:absolute;top:40px}
+.onb-l{position:relative}
+@media (max-width:900px){.onb-l>.logo{position:static}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .onb-l{background:#0F2A2C}}
+:root[data-theme="dark"] .onb-l{background:#0F2A2C}
+.onb-l .logo{padding:0;color:#fff}
+.onb-l h1{font-size:34px;line-height:1.12;letter-spacing:-.025em;font-weight:600;margin:0;max-width:16ch}
+.onb-l p{margin:0;max-width:44ch;color:rgba(255,255,255,.8);font-size:15.5px}
+.evid{margin-top:12px;max-width:520px;display:flex;flex-direction:column;border-top:1px solid rgba(255,255,255,.2)}
+.evid div{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:13px;color:rgba(255,255,255,.78)}
+.evid .num{font-size:20px;color:#fff}
+.evid small{display:block;color:rgba(255,255,255,.55);font-size:11.5px;margin-top:2px}
+.onb-r{background:var(--surface);padding-block:40px;padding-left:40px;padding-right:max(40px,env(safe-area-inset-right,0px));display:flex;flex-direction:column}
+@media (max-width:900px){.onb-l,.onb-r{padding-block:28px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}.onb-l h1{font-size:28px}}
+.steps-ind{display:flex;gap:6px;margin-bottom:22px}
+.steps-ind i{flex:1;height:3px;border-radius:2px;background:var(--line)}
+.steps-ind i.on{background:var(--brand)}
+.onb-r h2{font-size:20px;font-weight:600;letter-spacing:-.015em;margin:0 0 4px}
+.onb-r .lead{color:var(--muted);margin:0 0 22px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fgrid .full{grid-column:1/-1}
+@media (max-width:420px){.fgrid{grid-template-columns:1fr}}
+.choice{display:flex;flex-direction:column;gap:8px}
+.choice label{display:flex;gap:10px;align-items:center;border:1px solid var(--line2);border-radius:6px;padding:10px 12px;cursor:pointer;font-size:14px}
+.choice label:has(input:checked){border-color:var(--brand);background:var(--brand-tint)}
+.choice input{width:auto;accent-color:var(--brand);margin:0}
+.onb-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:24px}
+.onb-alt{margin-top:auto;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.linkbtn{background:none;border:0;padding:0;color:var(--brand);font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.legal{font-size:12px;color:var(--muted);margin-top:14px}
+.loading{display:grid;place-items:center;min-height:60vh;color:var(--muted);font-size:13.5px}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+</style>
+
+<div id="root"><div class="loading">Loading…</div></div>
+
+<script>
+/* ================= icons ================= */
+const I = {
+  overview:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 13.5h12M3.5 11l3-3.5 2.5 2 3.5-4.5"/></svg>',
+  plan:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M5 6h6M5 8.5h6M5 11h3.5"/></svg>',
+  coach:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg>',
+  progress:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="3.5" width="12" height="9.5" rx="1.5"/><circle cx="8" cy="8.3" r="2.3"/><path d="M5.5 3.5l1-1.5h3l1 1.5"/></svg>',
+  coverage:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1.8l5 1.9v4c0 3.1-2.2 5.4-5 6.5-2.8-1.1-5-3.4-5-6.5v-4z"/><path d="M6 8h4M8 6v4"/></svg>',
+  history:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3.2l2 1.3"/></svg>',
+  logo:'<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect width="22" height="22" rx="5" fill="currentColor" opacity=".12"/><path d="M4.5 13.5c3-4.5 6-6 13-5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4.5 16.5h13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>'
+};
+
+/* ================= state & storage ================= */
+const LS_KEY = "landing.v1";
+let S = { profile:null, weighins:[], checks:{} };
+let sel = null;
+let store = null, view = "overview", confirmReset = false, onbStep = 0, sample = null, busy = false;
+const draft = { situation:"ending", drug:"Wegovy", dose:"maint", coverageEnd:"", stopDate:"", startWeight:"", stopWeight:"", reason:"coverage", training:"none" };
+const chat = [];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const todayISO = () => { const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); };
+const addDays = (iso,n) => { const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+const daysBetween = (a,b) => Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5);
+const fmtDate = (iso,o) => new Date(iso+"T12:00:00").toLocaleDateString("en-US",o||{month:"short",day:"numeric"});
+const f1 = n => (Math.round(n*10)/10).toFixed(1);
+const sgn = n => (n>0?"+":n<0?"−":"")+f1(Math.abs(n));
+
+let writeChain = Promise.resolve();
+function save(){
+  const body = JSON.parse(JSON.stringify(S));
+  if (store && store.kind==="db") writeChain = writeChain.then(()=>store.ref.set(body)).catch(()=>localSave(body));
+  else localSave(body);
+}
+function localSave(b){ try{ localStorage.setItem(LS_KEY, JSON.stringify(b)); }catch(_){} }
+function localLoad(){ try{ const t=localStorage.getItem(LS_KEY); return t?JSON.parse(t):null; }catch(_){ return null; } }
+function adopt(d){ S = { profile:d&&d.profile||null, weighins:Array.isArray(d&&d.weighins)?d.weighins.slice():[], checks:(d&&d.checks)||{} }; }
+
+async function boot(){
+  const c = window.claude;
+  if (c && c.use){
+    c.use("sample").then(s=>{ sample=s; if(S.profile && view==="coach") render(); }).catch(()=>{});
+    try{
+      const [db,user] = await Promise.all([c.use("db"), c.use("user")]);
+      const uid = user ? await user.id() : null;
+      if (db && uid){
+        const ref = db.doc("data/users/"+uid+"/landing"); store={kind:"db",ref};
+        let first=true;
+        ref.onSnapshot(snap=>{
+          if (snap.exists) adopt(snap.data());
+          else if (first){ const l=localLoad(); if(l&&l.profile){ adopt(l); save(); } }
+          first=false; render();
+        }, ()=>useLocal());
+        return;
+      }
+    }catch(_){}
+  }
+  useLocal();
+}
+function useLocal(){ store={kind:"local"}; const l=localLoad(); if(l) adopt(l); render(); }
+
+/* ================= photos: stored on this device only (IndexedDB) ================= */
+const PH = { db:null, all:[], urls:{}, ok:null };
+const phScope = () => (S.profile && S.profile.sample) ? "sample" : "own";
+function phOpen(){ return new Promise((res,rej)=>{ try{ const r=indexedDB.open("landing-photos",1); r.onupgradeneeded=()=>r.result.createObjectStore("photos",{keyPath:"key"}); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }catch(e){ rej(e); } }); }
+const phStore = mode => PH.db.transaction("photos",mode).objectStore("photos");
+function phLoad(){ return new Promise(res=>{ if(!PH.db) return res(); const out=[]; let rq; try{ rq=phStore("readonly").openCursor(); }catch(_){ return res(); }
+  rq.onsuccess=()=>{ const c=rq.result; if(c){ out.push(c.value); c.continue(); return; }
+    Object.values(PH.urls).forEach(u=>URL.revokeObjectURL(u)); PH.urls={}; PH.all=out; out.forEach(p=>{ PH.urls[p.key]=URL.createObjectURL(p.blob); }); res(); };
+  rq.onerror=()=>res(); }); }
+async function phInit(){ try{ PH.db=await phOpen(); PH.ok=true; await phLoad(); }catch(_){ PH.ok=false; } if(S.profile) render(); }
+const photos = () => PH.all.filter(p=>p.scope===phScope()).sort((a,b)=>a.d<b.d?-1:1);
+const photoOn = d => photos().find(p=>p.d===d);
+const photoURL = p => p ? PH.urls[p.key] : null;
+function shrink(file){ return new Promise((res,rej)=>{ const u=URL.createObjectURL(file), img=new Image();
+  img.onload=()=>{ const k=Math.min(1,1400/Math.max(img.naturalWidth,img.naturalHeight)); const c=document.createElement("canvas"); c.width=Math.round(img.naturalWidth*k); c.height=Math.round(img.naturalHeight*k);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(u); c.toBlob(b=>b?res(b):rej(new Error("encode")),"image/jpeg",0.86); };
+  img.onerror=()=>{ URL.revokeObjectURL(u); rej(new Error("read")); }; img.src=u; }); }
+async function phPut(file,d){
+  if(!PH.db) throw new Error("unavailable");
+  if(file.type && !file.type.startsWith("image/")) throw new Error("type");
+  const blob=await shrink(file);
+  await new Promise((res,rej)=>{ const r=phStore("readwrite").put({key:phScope()+":"+d,scope:phScope(),d,blob,added:Date.now()}); r.onsuccess=res; r.onerror=()=>rej(r.error); });
+  await phLoad();
+}
+async function phDel(key){ if(!PH.db) return; await new Promise(res=>{ const r=phStore("readwrite").delete(key); r.onsuccess=res; r.onerror=res; }); await phLoad(); }
+async function phWipe(scope){ if(!PH.db) return; for(const p of PH.all.filter(p=>p.scope===scope)) await new Promise(res=>{ const r=phStore("readwrite").delete(p.key); r.onsuccess=res; r.onerror=res; }); await phLoad(); }
+function weightAt(d){ const wi=S.weighins.filter(x=>x.d<=d).sort((a,b)=>a.d<b.d?-1:1); return wi.length?wi[wi.length-1]:null; }
+async function handleUpload(input,d,msgEl){
+  const f=input.files&&input.files[0]; if(!f) return;
+  try{ await phPut(f,d); sel=d; render(); }
+  catch(e){ const t = e.message==="type" ? "Choose an image file, such as a JPG or PNG." : e.message==="unavailable" ? "Photos can't be saved in this browser view." : "That photo couldn't be read. Try a JPG or PNG."; if(msgEl){ msgEl.className="err"; msgEl.textContent=t; } }
+}
+
+/* ================= model ================= */
+function model(){
+  const p=S.profile, lost=Math.max(0.1,p.startWeight-p.stopWeight);
+  const wi=S.weighins.slice().sort((a,b)=>a.d<b.d?-1:1);
+  const latest=wi.length?wi[wi.length-1]:{d:p.stopDate,w:p.stopWeight};
+  const regain=latest.w-p.stopWeight, pct=regain/lost;
+  const zone=pct<=0.10?"hold":pct<=0.25?"drift":"act";
+  const daysOff=Math.max(0,daysBetween(p.stopDate,todayISO()));
+  const kept=(p.startWeight-latest.w)/lost;
+  const holdTop=p.stopWeight+lost*0.10, driftTop=p.stopWeight+lost*0.25;
+  const prior=wi.filter(x=>x.d<=addDays(latest.d,-28)).pop()||wi[0]||latest;
+  const lastDate=wi.length?wi[wi.length-1].d:p.stopDate;
+  const nextDue=addDays(lastDate,7);
+  const kg=latest.w/2.2046;
+  return {p,lost,wi,latest,regain,pct,zone,daysOff,weekNo:Math.floor(daysOff/7)+1,kept,holdTop,driftTop,trend:latest.w-prior.w,nextDue,
+    pLo:Math.round(kg*1.2/5)*5, pHi:Math.round(kg*1.6/5)*5};
+}
+const typical=(lost,wk)=>0.6*lost*(1-Math.exp(-wk/20))/(1-Math.exp(-52/20));
+const ZONE={
+  hold:{label:"Holding steady", body:m=>`You've kept ${Math.round(m.kept*100)}% of the weight you lost. Stay on protein and your three strength sessions.`},
+  drift:{label:"Drifting", body:m=>`You're up ${f1(m.regain)} lb since your last dose, ${Math.round(m.pct*100)}% of what you lost. This is common as appetite returns. Your plan now includes a one-week reset.`},
+  act:{label:"Reset recommended", body:m=>`You're up ${f1(m.regain)} lb since your last dose, ${Math.round(m.pct*100)}% of what you lost. Follow this week's reset, and consider a check-in with your prescriber or a registered dietitian.`}
+};
+const REASON={coverage:"Insurance stopped covering it",cost:"Too expensive",side:"Side effects",goal:"Reached my goal",other:"Something else"};
+const TRAIN={none:"None yet",some:"Once a week or less",regular:"Twice a week or more"};
+
+/* ================= self-pay price data (checked Oct 2026) ================= */
+const PRICE_ASOF="October 2026";
+const PRICES=[
+  {brand:"Wegovy injection",maker:"NovoCare Pharmacy",drugs:["Wegovy","Ozempic","Compounded semaglutide"],rows:[["0.25–0.5 mg (starter)",199,"New patients, first two fills; offer ends Dec 31, 2026","start"],["1–2.4 mg",349,"Standard self-pay price","maint"],["7.2 mg (Wegovy HD)",399,"","high"]]},
+  {brand:"Wegovy pill",maker:"NovoCare Pharmacy",drugs:["Wegovy","Ozempic","Compounded semaglutide"],rows:[["1.5 mg",149,"30 tablets","start"],["4 mg",199,"",""],["9 mg or 25 mg",299,"","maint"]]},
+  {brand:"Zepbound",maker:"LillyDirect",drugs:["Zepbound","Mounjaro","Compounded tirzepatide"],rows:[["2.5 mg",299,"","start"],["5 mg",399,"",""],["7.5–15 mg",449,"Refill within 45 days of last shipment","maint"]]},
+  {brand:"Foundayo (pill)",maker:"Lilly",drugs:[],rows:[["0.8–2.5 mg",149,"2.5 mg price is temporary through Dec 31, 2026","start"],["5.5 mg",199,"Temporary through Dec 31, 2026",""],["9 mg and up",299,"Higher doses require a refill within 45 days","maint"]]}
+];
+const DOSE={start:"Starting dose",maint:"Maintenance dose",high:"Highest dose"};
+function cheapestFor(drug,dose){
+  const rows=[]; PRICES.forEach(g=>{ if(!g.drugs.includes(drug)) return; g.rows.forEach(r=>{ if(r[3]===dose||(dose==="high"&&r[3]==="maint")) rows.push({brand:g.brand,maker:g.maker,dose:r[0],price:r[1]}); }); });
+  rows.sort((a,b)=>a.price-b.price); return rows[0]||null;
+}
+const QUESTIONS=[
+  "Based on my health, is continuing at a self-pay price, switching to a different form, or stopping the best option for me?",
+  "If I switch to a pill or a different medication, how should my dose change, and what side effects should I watch for?",
+  "If I stop, should I taper first? What should I do if my appetite comes back strongly?",
+  "How much protein and strength training do you recommend to protect muscle?",
+  "When should I come back for a check-in, and what weight change should make me call sooner?"
+];
+function covHTML(m){
+  const p=m.p, on=p.status==="on";
+  const best=cheapestFor(p.drug,p.dose||"maint");
+  const callout = best ? `<div class="callout"><div><p class="eyebrow" style="margin:0 0 4px">Lowest listed self-pay price for ${esc(p.drug)} at your dose</p><div><span class="num">$${best.price}</span><span class="hint"> / month · ${esc(best.brand)} ${esc(best.dose)} via ${esc(best.maker)}</span></div></div><div style="text-align:right"><div class="num" style="font-size:20px">$${(best.price*12).toLocaleString()}</div><span class="hint">per year</span></div></div>`
+    : `<div class="callout"><div><p class="eyebrow" style="margin:0 0 4px">${esc(p.drug)}</p><p class="prose" style="margin:0">We don't list a manufacturer self-pay price for this medication. Ask your prescriber which self-pay options below could fit you.</p></div></div>`;
+  const rows=PRICES.map(g=>`<tr class="grp"><td colspan="4">${g.brand} · ${g.maker}</td></tr>`+g.rows.map(r=>`<tr class="${g.drugs.includes(p.drug)&&r[3]===(p.dose||"maint")?"mine":""}"><td>${r[0]}</td><td class="r num">$${r[1]}</td><td class="r num">$${(r[1]*12).toLocaleString()}</td><td class="hint">${r[2]}</td></tr>`).join("")).join("");
+  return `<div class="stack">
+    <section class="panel">
+      ${callout}
+      <div class="tablewrap"><table class="prices"><thead><tr><th>Medication and dose</th><th class="r">Per month</th><th class="r">Per year</th><th>Conditions</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="notes"><span>Self-pay prices as published in ${PRICE_ASOF}. They change often, several offers end December 31, 2026, and they don't count toward your insurance deductible. Manufacturer programs exclude Medicare, Medicaid, VA and TRICARE members. If you have Medicare, ask your plan about the Medicare GLP-1 Bridge program.</span><span>Ozempic and Mounjaro are labeled for diabetes and don't have these weight-loss self-pay prices. Landing doesn't list compounded medications. Sources: <a href="https://www.onedaymd.com/2026/10/GLP-1-cost.html" target="_blank" rel="noopener">OneDayMD price check, Oct 18, 2026</a> · <a href="https://www.affinitywholehealth.com/blog/glp-1-prices-lillydirect-trumprx-novocare-explained" target="_blank" rel="noopener">Affinity Whole Health</a>. Confirm with the manufacturer before you fill.</span></div>
+    </section>
+    <section class="panel">
+      <div class="panel-h"><h2>Questions for your prescriber</h2><button class="btn sec" type="button" id="copy-q" style="padding:5px 10px;font-size:13px">Copy</button></div>
+      <ol class="qs">${QUESTIONS.map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p class="ok" id="copy-msg" style="padding:0 18px 12px"></p>
+    </section>
+    <section class="panel"><div class="panel-b"><p class="prose">Whether to continue, switch, or stop is a decision for you and your prescriber. Landing shows what each path costs and ${on?"gets you ready to keep your progress if you stop.":"helps you keep your progress after stopping."}</p></div></section>
+  </div>`;
+}
+const TRANSITION=[
+  ["confirm","Confirm your coverage end date","Ask HR or your plan for the exact last day of coverage."],
+  ["appeal","Ask about an exception or appeal","Some plans allow a medical exception. Ask what the process is."],
+  ["compare","Compare self-pay prices","See what staying on would cost on the Coverage page.","coverage"],
+  ["visit","Book a visit with your prescriber","Decide together: continue at self-pay, switch, or stop with a plan.","coverage"],
+  ["strength","Start strength training now","Easier while your appetite is still low. See your plan.","plan"],
+  ["baseline","Take a baseline photo and weigh-in","So you can see your progress clearly later.","progress"]
+];
+function ovOnHTML(m){
+  const days=daysBetween(todayISO(),m.p.coverageEnd);
+  const c=S.checks.transition||{};
+  const done=TRANSITION.filter(t=>c[t[0]]).length;
+  const best=cheapestFor(m.p.drug,m.p.dose||"maint");
+  return `<div class="ov">
+    <div class="stack">
+      <section class="panel">
+        <div class="count"><span class="num">${Math.max(0,days)}</span><p>day${days===1?"":"s"} until your ${esc(m.p.drug)} coverage ends on <b>${fmtDate(m.p.coverageEnd,{month:"long",day:"numeric"})}</b>.${best?` Staying on at self-pay would cost at least <b class="num">$${best.price}/month</b>.`:""}</p></div>
+        <div class="panel-h" style="border-top:0"><h2>Your transition checklist</h2><span class="aside num">${done}/${TRANSITION.length}</span></div>
+        <ul class="todo">${TRANSITION.map(([k,b,s,go])=>`<li><label><input type="checkbox" data-tcheck="${k}" ${c[k]?"checked":""}><div><b>${b}</b><span>${s}${go?` <button type="button" class="linkbtn" data-view="${go}" style="font-size:12.5px">Open</button>`:""}</span></div></label></li>`).join("")}</ul>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h2>Took your last dose?</h2><span class="aside">Starts your landing plan</span></div>
+        <div class="panel-b">
+          <div class="lastdose">
+            <label class="f" for="ld-date">Date of last dose<input id="ld-date" type="date" max="${todayISO()}" value="${todayISO()}"></label>
+            <label class="f" for="ld-w">Weight that day<span class="suffix"><input id="ld-w" type="number" inputmode="decimal" step="0.1" placeholder="${f1(m.latest.w)}"><i>lb</i></span></label>
+            <button class="btn" type="button" id="ld-go">Start my landing</button>
+          </div>
+          <p class="err" id="ld-msg" style="margin-top:10px"></p>
+        </div>
+      </section>
+    </div>
+    <div class="stack">${snapHTML(m)}</div>
+  </div>`;
+}
+
+/* ================= render ================= */
+function render(){
+  const root=$("#root");
+  if (!S.profile){ root.innerHTML=onbHTML(); bindOnb(); return; }
+  const m=model();
+  const on=m.p.status==="on";
+  const pages={overview:["Overview",on?`Getting ready for your coverage to end`:`Week ${m.weekNo} since your last dose of ${esc(m.p.drug)}`],coverage:["Coverage and cost",on?"What it would cost to stay on, so you can decide with your prescriber":"What restarting would cost, if you and your prescriber decide to"],plan:["Your plan","Built from your profile and your latest weigh-in"],coach:["Coach","Answers use your weigh-ins and plan"],progress:["Progress photos","See your progress next to the numbers"],history:["Weigh-ins",(on?`${m.wi.length} entries`:`${m.wi.length} entries since ${fmtDate(m.p.stopDate,{month:"long",day:"numeric"})}`)]};
+  const body={overview:on?ovOnHTML:ovHTML,coverage:covHTML,plan:planHTML,coach:coachHTML,progress:progHTML,history:histHTML}[view](m);
+  const navItems=[["overview","Overview"],["coverage","Coverage"],["progress","Photos"],["plan","Plan"],["coach","Coach"],["history","Weigh-ins"]];
+  root.innerHTML=`<div class="app">
+    <aside class="side">
+      <div class="logo" style="color:var(--brand)">${I.logo}<span style="color:var(--ink)">Landing</span></div>
+      <nav class="nav">${navItems.map(([k,l])=>`<button type="button" data-view="${k}" ${view===k?'aria-current="page"':''}>${I[k]}${l}</button>`).join("")}</nav>
+      <div class="side-foot">
+        <span>${esc(m.p.drug)} · ${on?"coverage ends "+fmtDate(m.p.coverageEnd):"last dose "+fmtDate(m.p.stopDate)}</span>
+        ${confirmReset?`<span class="confirm">Erase all data? <button type="button" id="rs-y">Erase</button><button type="button" id="rs-n">Cancel</button></span>`:`<button type="button" id="rs">${m.p.sample?"Exit sample":"Erase my data"}</button>`}
+        <span>Not medical advice. Ask your prescriber about medication changes.</span>
+      </div>
+    </aside>
+    <div class="main">
+      ${m.p.sample?`<div class="banner"><span>You're viewing a sample member: ${on?esc(m.p.drug)+" coverage ends in "+daysBetween(todayISO(),m.p.coverageEnd)+" days":"week "+m.weekNo+" off "+esc(m.p.drug)+" after losing coverage"}.</span><button type="button" id="own">Start my own log</button></div>`:""}
+      <div class="mobile-top"><div class="logo" style="padding:0;color:var(--brand)">${I.logo}<span style="color:var(--ink)">Landing</span></div><span class="hint">${on?"Before your last dose":"Week "+m.weekNo}</span></div>
+      <div class="content">
+        <div class="pagehead"><div><h1>${pages[view][0]}</h1><p>${pages[view][1]}</p></div>${view==="overview"&&!on?`<span class="hint">Next weigh-in <span class="num" style="color:var(--ink)">${fmtDate(m.nextDue,{weekday:"short",month:"short",day:"numeric"})}</span></span>`:""}</div>
+        ${body}
+      </div>
+    </div>
+    <nav class="tabbar">${navItems.map(([k,l])=>`<button type="button" data-view="${k}" ${view===k?'aria-current="page"':''}>${I[k]}${l}</button>`).join("")}</nav>
+  </div>`;
+  bind(m);
+}
+
+function ovHTML(m){
+  const t=todayISO(), c=S.checks[t]||{};
+  const tasks=[["protein",`Hit ${m.pLo}–${m.pHi} g protein`,"About 30–40 g at each meal"],
+    ["move",[1,3,5].includes(new Date().getDay())?"Strength session":"20-minute walk",[1,3,5].includes(new Date().getDay())?"See today's session in your plan":"After your largest meal"],
+    ["plate","Plate first, then serve","Portion before you sit down"]];
+  const done=tasks.filter(x=>c[x[0]]).length;
+  return `<div class="ov">
+    <div class="stack">
+      <section class="panel">
+        <div class="statusline ${m.zone}"><span class="dot ${m.zone}" style="margin-top:7px"></span><div><span class="label">${ZONE[m.zone].label}</span><p>${ZONE[m.zone].body(m)}</p></div></div>
+        <div class="summary">
+          <div><div class="k">Current</div><div class="v num">${f1(m.latest.w)}<small>lb</small></div></div>
+          <div><div class="k">Since last dose</div><div class="v num">${sgn(m.regain)}<small>lb</small></div></div>
+          <div><div class="k">Hold zone limit</div><div class="v num">${f1(m.holdTop)}<small>lb</small></div></div>
+          <div><div class="k">Loss kept</div><div class="v num">${Math.round(m.kept*100)}<small>%</small></div></div>
+        </div>
+        <div class="chart-box">${chartSVG(m)}</div>
+        <div class="chart-key">
+          <span><svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="var(--brand)" stroke-width="2"/></svg>Your weight</span>
+          <span><svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="3 3"/></svg>Typical regain after stopping (meta-analysis estimate)</span>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h2>Log a weigh-in</h2><span class="aside">Same day each week, before breakfast</span></div>
+        <div class="panel-b">
+          <div class="quicklog">
+            <label class="f" for="w-val">Weight<span class="suffix"><input id="w-val" type="number" inputmode="decimal" step="0.1" min="60" max="700" placeholder="${f1(m.latest.w)}"><i>lb</i></span></label>
+            <label class="f" for="w-date">Date<input id="w-date" type="date" value="${todayISO()}" max="${todayISO()}"></label>
+            <div class="f" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:var(--ink2)">Photo <span class="btn sec filebtn" id="w-photo-btn" style="justify-content:flex-start;font-weight:400;color:var(--ink2)">Add a photo (optional)<input id="w-photo" type="file" accept="image/*" aria-label="Add a photo to this weigh-in"></span></div>
+            <button class="btn" id="w-add" type="button">Save weigh-in</button>
+          </div>
+          <p class="ok" id="w-msg" aria-live="polite" style="margin-top:10px"></p>
+        </div>
+      </section>
+    </div>
+    <div class="stack">
+      ${snapHTML(m)}
+      <section class="panel">
+        <div class="panel-h"><h2>Today</h2><span class="aside num">${done}/3</span></div>
+        <ul class="todo">${tasks.map(([k,b,s])=>`<li><label><input type="checkbox" data-check="${k}" ${c[k]?"checked":""}><div><b>${b}</b><span>${s}</span></div></label></li>`).join("")}</ul>
+      </section>
+    </div>
+  </div>`;
+}
+
+function snapHTML(m){
+  const dates=[...new Set([...m.wi.map(x=>x.d),...photos().map(p=>p.d)])].sort();
+  if(!sel || !dates.includes(sel)) sel=m.latest.d;
+  const i=dates.indexOf(sel), p=photoOn(sel), url=photoURL(p), w=weightAt(sel);
+  const wk=Math.floor(daysBetween(m.p.stopDate,sel)/7);
+  const body = PH.ok===false ? `<div class="snap-empty">Photos aren't available in this browser view.</div>`
+    : url ? `<img src="${url}" alt="Progress photo from ${fmtDate(sel,{month:"long",day:"numeric"})}">`
+    : `<div class="snap-empty">No photo for this date<span class="btn sec filebtn">Add photo<input type="file" accept="image/*" data-upload="${sel}" aria-label="Add a photo for ${fmtDate(sel)}"></span></div>`;
+  return `<section class="panel">
+    <div class="panel-h"><h2>Snapshot</h2><span class="aside">${fmtDate(sel,{weekday:"short",month:"short",day:"numeric"})}</span></div>
+    <div class="snap">${body}</div>
+    <dl class="kv" style="margin:0">
+      <div><dt>Weight</dt><dd class="num">${w?f1(w.w)+" lb":"—"}${w&&w.d!==sel?` <span class="hint">(${fmtDate(w.d)})</span>`:""}</dd></div>
+      <div><dt>Since last dose</dt><dd class="num">${w?sgn(w.w-m.p.stopWeight)+" lb":"—"}</dd></div>
+    </dl>
+    <div class="snap-nav">
+      <button class="iconbtn" type="button" data-sel="${dates[i-1]||""}" ${i>0?"":"disabled"} aria-label="Earlier date">‹</button>
+      <span class="hint">${wk<=0?"Last dose":"Week "+wk} · tap the chart to jump</span>
+      <button class="iconbtn" type="button" data-sel="${dates[i+1]||""}" ${i<dates.length-1?"":"disabled"} aria-label="Later date">›</button>
+    </div>
+    <p class="err" id="snap-msg" style="padding:0 14px;min-height:0"></p>
+  </section>`;
+}
+
+function chartSVG(m){
+  const W=700,H=290,L=40,R=78,T=12,B=28;
+  const lastWk=m.wi.length?daysBetween(m.p.stopDate,m.wi[m.wi.length-1].d)/7:0;
+  const xMax=Math.max(12,Math.ceil((Math.max(lastWk,m.daysOff/7)+4)/4)*4);
+  const ws=m.wi.map(x=>x.w);
+  const yLo=Math.floor(Math.min(m.p.stopWeight,...ws)-Math.max(2,m.lost*0.07));
+  const yHi=Math.ceil(Math.max(m.p.stopWeight+typical(m.lost,xMax),m.driftTop,...ws)+Math.max(1.5,m.lost*0.04));
+  const x=wk=>L+(wk/xMax)*(W-L-R), y=v=>T+(1-(v-yLo)/(yHi-yLo))*(H-T-B);
+  const step=(yHi-yLo)>40?10:(yHi-yLo)>16?5:2;
+  let g="";
+  for(let v=Math.ceil(yLo/step)*step;v<=yHi;v+=step) g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${y(v)+3.5}" text-anchor="end" font-size="10.5" fill="var(--muted)" font-family="Geist Mono,monospace">${v}</text>`;
+  const xs=xMax>24?8:4;
+  for(let w=0;w<=xMax;w+=xs) g+=`<text x="${x(w)}" y="${H-8}" text-anchor="${w===0?"start":"middle"}" font-size="10.5" fill="var(--muted)" font-family="Geist Mono,monospace">${w===0?"Last dose":"Wk "+w}</text>`;
+  const bandBottom=H-B;
+  const bands=`<rect x="${L}" y="${y(m.driftTop)}" width="${W-L-R}" height="${y(m.holdTop)-y(m.driftTop)}" fill="var(--drift-bg)"/>
+    <rect x="${L}" y="${y(m.holdTop)}" width="${W-L-R}" height="${bandBottom-y(m.holdTop)}" fill="var(--hold-bg)"/>
+    <line x1="${L}" x2="${W-R}" y1="${y(m.holdTop)}" y2="${y(m.holdTop)}" stroke="var(--hold)" stroke-width="1" opacity=".55"/>
+    <line x1="${L}" x2="${W-R}" y1="${y(m.driftTop)}" y2="${y(m.driftTop)}" stroke="var(--drift)" stroke-width="1" opacity=".45"/>
+    <text x="${W-R+8}" y="${y(m.holdTop)+14}" font-size="10.5" font-weight="600" fill="var(--hold)">Hold zone</text>
+    <text x="${W-R+8}" y="${y(m.holdTop)+27}" font-size="10" fill="var(--muted)" font-family="Geist Mono,monospace">≤ ${f1(m.holdTop)}</text>
+    <text x="${W-R+8}" y="${(y(m.driftTop)+y(m.holdTop))/2+4}" font-size="10.5" font-weight="600" fill="var(--drift)">Drift</text>`;
+  let tp="";for(let w=0;w<=xMax;w+=.5) tp+=(tp?"L":"M")+x(w).toFixed(1)+","+y(m.p.stopWeight+typical(m.lost,w)).toFixed(1);
+  const pts=m.wi.filter(o=>o.d>=m.p.stopDate).map(o=>({X:x(daysBetween(m.p.stopDate,o.d)/7),Y:y(o.w),o}));
+  const line=pts.map((p,i)=>(i?"L":"M")+p.X.toFixed(1)+","+p.Y.toFixed(1)).join("");
+  const last=pts[pts.length-1];
+  const col={hold:"var(--hold)",drift:"var(--drift)",act:"var(--act)"}[m.zone];
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly weight since last dose, with hold and drift zones">
+    ${bands}${g}
+    <line x1="${L}" x2="${L}" y1="${T}" y2="${H-B}" stroke="var(--line2)"/>
+    <path d="${tp}" fill="none" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 3"/>
+    <path d="${line}" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${sel?`<line x1="${x(daysBetween(m.p.stopDate,sel)/7)}" x2="${x(daysBetween(m.p.stopDate,sel)/7)}" y1="${T}" y2="${H-B}" stroke="var(--ink2)" stroke-width="1" stroke-dasharray="2 3" opacity=".6"/>`:""}
+    ${pts.map(p=>`<circle cx="${p.X}" cy="${p.Y}" r="2.6" fill="var(--surface)" stroke="var(--brand)" stroke-width="1.4"/>`).join("")}
+    ${photos().map(ph=>{ const ww=weightAt(ph.d); if(!ww) return ""; const X=x(daysBetween(m.p.stopDate,ph.d)/7), Y=y(ww.w); return `<rect x="${X-5.5}" y="${Y-5.5}" width="11" height="11" rx="2.5" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.4"/><circle cx="${X}" cy="${Y}" r="2" fill="var(--ink)"/>`; }).join("")}
+    ${last?`<circle cx="${last.X}" cy="${last.Y}" r="5" fill="${col}" stroke="var(--surface)" stroke-width="2"/>
+      <text x="${last.X}" y="${last.Y-11}" text-anchor="middle" font-size="11" font-weight="500" fill="var(--ink)" font-family="Geist Mono,monospace">${f1(last.o.w)}</text>`:""}
+    ${[...new Set([...m.wi.map(o=>o.d),...photos().map(p=>p.d)])].map(d=>{ const ww=weightAt(d); if(!ww) return ""; return `<circle class="hit" cx="${x(daysBetween(m.p.stopDate,d)/7)}" cy="${y(ww.w)}" r="13" fill="transparent" data-sel="${d}"><title>${fmtDate(d)}: ${f1(ww.w)} lb${photoOn(d)?" · photo":""}</title></circle>`; }).join("")}
+  </svg>`;
+}
+
+const PROG={a:null,b:null};
+function progHTML(m){
+  const ph=photos();
+  const priv=`<div class="privacy"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" style="flex:none;margin-top:2px"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2"/></svg><span>Photos are stored only on this device. They are never uploaded or shared, and the coach can't see them.</span></div>`;
+  if(PH.ok===false) return `<section class="panel"><div class="panel-b"><p class="prose">Photos can't be saved in this browser view, for example in a private window. Your weigh-ins still work.</p></div>${priv}</section>`;
+  let cmp="";
+  if(ph.length>=2){
+    const a=ph.find(p=>p.d===PROG.a)||ph[0], b=ph.find(p=>p.d===PROG.b)||ph[ph.length-1];
+    PROG.a=a.d; PROG.b=b.d;
+    const wa=weightAt(a.d), wb=weightAt(b.d);
+    const opt=cur=>ph.map(p=>`<option value="${p.d}" ${p.d===cur?"selected":""}>${fmtDate(p.d,{month:"short",day:"numeric",year:"numeric"})}</option>`).join("");
+    const fig=(side,p,w)=>`<figure><div class="ph"><img src="${photoURL(p)}" alt="Progress photo from ${fmtDate(p.d,{month:"long",day:"numeric"})}"></div>
+      <figcaption><select data-cmp="${side}" aria-label="${side==="a"?"First":"Second"} photo date">${opt(p.d)}</select><span class="num hint">${w?f1(w.w)+" lb":"No weigh-in yet"}</span></figcaption></figure>`;
+    const diff=wa&&wb?wb.w-wa.w:null, wks=Math.abs(Math.round(daysBetween(a.d,b.d)/7));
+    cmp=`<section class="panel cmp-panel"><div class="panel-h"><h2>Compare</h2><span class="aside">Choose any two dates</span></div>
+      <div class="compare">${fig("a",a,wa)}${fig("b",b,wb)}</div>
+      ${diff===null?"":`<div class="cmp-sum"><span class="num">${sgn(diff)} lb</span> over ${wks} week${wks===1?"":"s"}.${Math.abs(diff)<2?" Small changes on the scale can still look different in photos, and the reverse.":""}</div>`}</section>`;
+  }
+  const tiles=ph.slice().reverse().map(p=>{ const w=weightAt(p.d); return `<div class="tile"><button class="ph" type="button" data-open="${p.d}" aria-label="Open ${fmtDate(p.d)} on the overview"><img src="${photoURL(p)}" alt="Progress photo from ${fmtDate(p.d,{month:"long",day:"numeric"})}"></button>
+    <div class="meta"><span>${fmtDate(p.d,{month:"short",day:"numeric"})}</span><span class="num hint">${w?f1(w.w)+" lb":"—"}</span></div>
+    <button class="del" type="button" data-delph="${p.key}" style="align-self:flex-start;padding-left:0">Delete</button></div>`; }).join("");
+  const add=`<div class="tile add"><div class="ph"><span>Add a photo</span><input id="ph-date" type="date" value="${todayISO()}" max="${todayISO()}" min="${m.p.status==="on"?addDays(todayISO(),-365):m.p.stopDate}" aria-label="Photo date"><span class="btn sec filebtn" style="font-size:13px;padding:6px 10px">Choose photo<input type="file" accept="image/*" id="ph-file" aria-label="Choose a photo"></span></div><p class="err" id="ph-msg" style="font-size:12px"></p></div>`;
+  return `<div class="stack">${cmp}
+    <section class="panel"><div class="panel-h"><h2>All photos</h2><span class="aside">${ph.length} photo${ph.length===1?"":"s"}</span></div>
+      ${ph.length?"":`<div class="panel-b" style="padding-bottom:0"><p class="prose">Take a photo on weigh-in day: same spot, same light, same clothes. Over a few weeks it shows what the scale can't.</p></div>`}
+      <div class="gallery">${add}${tiles}</div>${priv}</section></div>`;
+}
+
+function planHTML(m){
+  const lvl=m.p.training||"none";
+  const rx=lvl==="regular"?"3 × 8–10":"2 × 10–12";
+  const why=m.p.status==="on"?{coverage:"Your coverage is ending. Building protein and strength habits now, while your appetite is still low, makes the transition much easier."}:{coverage:"Your coverage ended, so this plan focuses on keeping as much progress as possible without the drug.",cost:"You stopped because of cost, so this plan uses only habits and a basic gym or home setup.",side:"You stopped because of side effects. Appetite usually returns gradually, so the habits start now.",goal:"You reached your goal. The work shifts from losing to holding.",other:"The first six months after stopping matter most. This plan is built for that window."}[m.p.reason];
+  const reset=m.zone==="hold"?"":`<section class="panel wide reset-box ${m.zone}">
+      <div class="panel-h"><h2><span class="dot ${m.zone}"></span>This week's reset</h2><span class="aside">Added because you're ${m.zone==="act"?"over":"in"} the drift zone</span></div>
+      <div class="panel-b" style="padding-top:12px"><ol class="steps" style="padding-left:18px">
+        <li>Log everything you eat for 7 days. Awareness alone usually slows drift.</li>
+        <li>Eat protein and vegetables first at every meal.</li>
+        <li>Walk 20 minutes after your largest meal, every day this week.</li>
+        ${m.zone==="act"?"<li>Book a check-in with your prescriber or a registered dietitian.</li>":""}
+      </ol></div></section>`;
+  return `<div class="plan">
+    ${reset}
+    <section class="panel wide"><div class="panel-b"><p class="prose">${why}</p></div></section>
+    <section class="panel">
+      <div class="panel-h"><h2>Protein</h2><span class="aside">Daily target</span></div>
+      <div class="panel-b">
+        <div class="target"><span class="num">${m.pLo}–${m.pHi}</span><span class="hint">grams per day</span></div>
+        <p class="prose">A common starting range for protecting muscle is 1.2–1.6 g per kg of body weight. Aim for 30–40 g at each meal. Confirm your target with your clinician or a dietitian.</p>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-h"><h2>Habits that replace the drug</h2></div>
+      <div class="panel-b" style="padding-top:12px"><ol class="steps" style="padding-left:18px">
+        <li>Portion your plate before you sit down.</li>
+        <li>Expect appetite to return around weeks 4–12. It passes.</li>
+        <li>Sleep 7–9 hours. Short sleep raises next-day appetite.</li>
+        <li>Weigh in weekly, not daily.</li>
+      </ol></div>
+    </section>
+    <section class="panel wide">
+      <div class="panel-h"><h2>Strength program</h2><span class="aside">3 days a week · ${rx} reps · stop 2 reps short of failure</span></div>
+      <div class="panel-b" style="padding:0 0 4px"><p class="prose" style="padding:14px 18px 6px">Roughly a quarter to nearly half of the weight lost on GLP-1s is lean mass, depending on the drug. Strength training and protein help protect it, and in a randomized trial, people who exercised during treatment regained less weight in the year after stopping.</p>
+      <div class="tablewrap"><table class="prog"><thead><tr><th>Day</th><th>Lower body</th><th>Push</th><th>Pull and core</th></tr></thead><tbody>
+        <tr><td>Mon</td><td>Goblet squat</td><td>Push-up (incline is fine)</td><td>Dumbbell row</td></tr>
+        <tr><td>Wed</td><td>Romanian deadlift</td><td>Overhead press</td><td>Plank, 3 × 30 s</td></tr>
+        <tr><td>Fri</td><td>Step-up</td><td>Dumbbell bench press</td><td>Lat pulldown or band pull</td></tr>
+      </tbody></table></div></div>
+    </section>
+  </div>`;
+}
+
+function coachHTML(m){
+  if (!sample) return `<section class="panel"><div class="panel-b"><p class="prose">The coach isn't available in this view. Your plan and weigh-ins still work.</p></div></section>`;
+  const turns=[{role:"assistant",content:`I can see your weigh-ins and your plan. Ask me about appetite, meals, training, or a hard week.`},...chat];
+  return `<section class="panel coach">
+    <div class="thread" id="thread">${turns.map(t=>turnHTML(t.role,t.content)).join("")}</div>
+    <div class="composer">
+      ${chat.length?"":`<div class="sugg" id="sugg"><button type="button">My appetite came back. What should I do?</button><button type="button">Three high-protein breakfasts</button><button type="button">I'm up 3 lb this month. Should I worry?</button></div>`}
+      <form id="ask"><textarea id="q" rows="1" placeholder="Message your coach"></textarea><button class="btn" id="send" type="submit">Send</button></form>
+      <span class="hint">The coach doesn't advise on doses, tapering, or restarting medication.</span>
+    </div>
+  </section>`;
+}
+const turnHTML=(role,txt)=>`<div class="turn"><div class="av ${role==="user"?"me":"ai"}">${role==="user"?"You".slice(0,1):"L"}</div><div><div class="who">${role==="user"?"You":"Landing coach"}</div><div class="txt">${esc(txt)}</div></div></div>`;
+
+function histHTML(m){
+  const rows=m.wi.slice().reverse();
+  return `<section class="panel"><div class="tablewrap"><table class="hist">
+    <thead><tr><th>Date</th><th style="text-align:left">Photo</th><th>Weight</th><th>Change</th><th>Since last dose</th><th></th></tr></thead>
+    <tbody>${rows.map((x,i)=>{const prev=rows[i+1];const d=prev?x.w-prev.w:null;const s=x.w-m.p.stopWeight;
+      const pu=photoURL(photoOn(x.d)); return `<tr><td>${fmtDate(x.d,{weekday:"short",month:"short",day:"numeric"})}</td><td style="text-align:left">${pu?`<button class="del" type="button" data-open="${x.d}" style="padding:0" aria-label="Open photo from ${fmtDate(x.d)}"><img class="thumb" src="${pu}" alt=""></button>`:`<span class="hint">—</span>`}</td><td class="num">${f1(x.w)}</td><td class="num ${d>0?"up":d<0?"down":""}">${d===null?"—":sgn(d)}</td><td class="num">${sgn(s)}</td><td>${rows.length>1?`<button class="del" type="button" data-del="${x.d}">Delete</button>`:""}</td></tr>`;}).join("")}</tbody>
+  </table></div></section>`;
+}
+
+/* ================= bindings ================= */
+function bind(m){
+  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{ view=b.dataset.view; confirmReset=false; render(); window.scrollTo(0,0); });
+  const rs=$("#rs"); if(rs) rs.onclick=()=>{ confirmReset=true; render(); };
+  const ry=$("#rs-y"); if(ry) ry.onclick=wipe;
+  const rn=$("#rs-n"); if(rn) rn.onclick=()=>{ confirmReset=false; render(); };
+  const own=$("#own"); if(own) own.onclick=wipe;
+  document.querySelectorAll("[data-sel]").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.sel){ sel=b.dataset.sel; render(); } }));
+  document.querySelectorAll("[data-upload]").forEach(inp=>inp.onchange=()=>handleUpload(inp,inp.dataset.upload,$("#snap-msg")));
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{ sel=b.dataset.open; view="overview"; render(); window.scrollTo(0,0); });
+  document.querySelectorAll("[data-delph]").forEach(b=>b.onclick=async()=>{ await phDel(b.dataset.delph); render(); });
+  document.querySelectorAll("[data-cmp]").forEach(sl=>sl.onchange=()=>{ PROG[sl.dataset.cmp]=sl.value; render(); });
+  const pf=$("#ph-file"); if(pf) pf.onchange=()=>{ const d=$("#ph-date").value||todayISO(); if((S.profile.status!=="on"&&d<S.profile.stopDate)||d>todayISO()){ $("#ph-msg").textContent="Choose a date between your last dose and today."; return; } handleUpload(pf,d,$("#ph-msg")); };
+  const wp=$("#w-photo"); if(wp) wp.onchange=()=>{ const f=wp.files&&wp.files[0]; const b=$("#w-photo-btn"); b.firstChild.textContent = f ? "Photo attached: "+(f.name.length>18?f.name.slice(0,15)+"…":f.name) : "Add a photo (optional)"; };
+  document.querySelectorAll("[data-tcheck]").forEach(cb=>cb.onchange=()=>{ S.checks.transition={...(S.checks.transition||{}),[cb.dataset.tcheck]:cb.checked}; save(); render(); });
+  const cq=$("#copy-q"); if(cq) cq.onclick=()=>{ const t="Questions for my prescriber:\n"+QUESTIONS.map((q,i)=>(i+1)+". "+q).join("\n"); const msg=$("#copy-msg");
+    navigator.clipboard.writeText(t).then(()=>{ msg.className="ok"; msg.textContent="Copied. Paste them into your notes or a message to your clinic."; },()=>{ msg.className="err"; msg.textContent="Couldn't copy here. Select the questions and copy them instead."; }); };
+  const ld=$("#ld-go"); if(ld) ld.onclick=()=>{
+    const d=$("#ld-date").value, w=+$("#ld-w").value, msg=$("#ld-msg");
+    if(!d||d>todayISO()) return void(msg.textContent="Choose today or an earlier date.");
+    if(!w||w<60||w>700) return void(msg.textContent="Enter your weight in pounds.");
+    if(w>=S.profile.startWeight) return void(msg.textContent="That's at or above your starting weight. Check the number.");
+    S.profile={...S.profile,status:"off",stopDate:d,stopWeight:w};
+    S.weighins=S.weighins.filter(x=>x.d!==d).concat({d,w}).sort((a,b)=>a.d<b.d?-1:1);
+    sel=d; view="overview"; save(); render();
+  };
+  const add=$("#w-add"); if(add){ add.onclick=addWeigh; $("#w-val").onkeydown=e=>{ if(e.key==="Enter") addWeigh(); }; }
+  document.querySelectorAll("[data-check]").forEach(cb=>cb.onchange=()=>{
+    const t=todayISO(); S.checks[t]={...(S.checks[t]||{}),[cb.dataset.check]:cb.checked};
+    const keys=Object.keys(S.checks).sort(); while(keys.length>60) delete S.checks[keys.shift()];
+    save(); render();
+  });
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ S.weighins=S.weighins.filter(x=>x.d!==b.dataset.del); save(); render(); });
+  const ask=$("#ask");
+  if (ask){
+    ask.onsubmit=e=>{ e.preventDefault(); const q=$("#q").value.trim(); if(q){ $("#q").value=""; askCoach(q); } };
+    $("#q").onkeydown=e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); ask.requestSubmit(); } };
+    const sg=$("#sugg"); if(sg) sg.onclick=e=>{ const b=e.target.closest("button"); if(b) askCoach(b.textContent); };
+    const th=$("#thread"); th.scrollTop=th.scrollHeight;
+  }
+}
+function wipe(){ const sc=phScope(); phWipe(sc).then(()=>{ if(S.profile) render(); }); sel=null; PROG.a=PROG.b=null; confirmReset=false; S={profile:null,weighins:[],checks:{}}; chat.length=0; view="overview"; onbStep=0; save(); render(); }
+function addWeigh(){
+  const w=+$("#w-val").value, d=$("#w-date").value, msg=$("#w-msg");
+  const bad=t=>{ msg.className="err"; msg.textContent=t; };
+  if(!w||w<60||w>700) return bad("Enter your weight in pounds, for example 186.4.");
+  if(!d||d>todayISO()) return bad("Choose today or an earlier date.");
+  if(S.profile.status!=="on" && d<S.profile.stopDate) return bad("Choose a date on or after your last dose.");
+  const pin=$("#w-photo"), file=pin&&pin.files&&pin.files[0];
+  S.weighins=S.weighins.filter(x=>x.d!==d).concat({d,w}).sort((a,b)=>a.d<b.d?-1:1);
+  sel=d; save();
+  const z=model().zone;
+  const note=(file?"Saved with photo. ":"Saved. ")+(z==="hold"?"You're within your hold zone.":z==="drift"?"You're in the drift zone, so a reset was added to your plan.":"A reset was added to your plan.");
+  const show=(t,cls)=>{ const o=$("#w-msg"); if(o){ o.className=cls; o.textContent=t; } };
+  if(file){ phPut(file,d).then(()=>{ render(); show(note,"ok"); }).catch(()=>{ render(); show("Weigh-in saved, but the photo couldn't be read. Try a JPG or PNG.","err"); }); }
+  else { render(); show(note,"ok"); }
+}
+
+/* ================= coach ================= */
+const RULES=`You are the coach in Landing, an app that helps people maintain weight after stopping a GLP-1 medication. Be warm, calm, practical, and brief (under 120 words, plain text, no markdown headers; short lists are fine). Never shame. Never advise on medication doses, tapering, switching, or restarting a GLP-1; say that's a decision for their prescriber. Don't recommend very low calorie diets, fasting protocols, or skipping meals. If the user describes binge eating, purging, or feeling out of control with food, gently suggest talking to a clinician and mention the National Alliance for Eating Disorders helpline (1-866-662-1235). For anything that sounds like a medical symptom, tell them to contact a doctor.`;
+function context(){
+  const m=model();
+  if(m.p.status==="on") return `User context: still taking ${m.p.drug} (${DOSE[m.p.dose||"maint"]}); insurance coverage ends ${m.p.coverageEnd} (${daysBetween(todayISO(),m.p.coverageEnd)} days away). They haven't decided whether to continue at a self-pay price, switch, or stop; that decision is for them and their prescriber, so give cost and habit information, not a recommendation about the medication. Starting weight ${m.p.startWeight} lb; current ${m.latest.w} lb. Strength training: ${TRAIN[m.p.training]}.`;
+  return `User context: stopped ${m.p.drug} on ${m.p.stopDate} (${Math.floor(m.daysOff/7)} weeks ago); reason: ${REASON[m.p.reason]}. Starting weight ${m.p.startWeight} lb; at last dose ${m.p.stopWeight} lb; latest ${m.latest.w} lb (${sgn(m.regain)} lb since stopping, ${Math.round(m.pct*100)}% of weight lost). Status: ${ZONE[m.zone].label}. Protein target ${m.pLo}-${m.pHi} g/day. Strength training: ${TRAIN[m.p.training]}. Recent weigh-ins: ${m.wi.slice(-6).map(x=>x.d+" "+x.w).join("; ")}.`;
+}
+async function askCoach(q){
+  if(busy||!sample) return; busy=true;
+  chat.push({role:"user",content:q});
+  render();
+  const th=$("#thread");
+  const el=document.createElement("div"); el.innerHTML=turnHTML("assistant","Thinking…"); const node=el.firstChild; th.appendChild(node);
+  const txt=node.querySelector(".txt"); th.scrollTop=th.scrollHeight; $("#send").disabled=true;
+  const turns=chat.slice(-8).map(x=>({...x})); if(turns[0].role!=="user") turns.shift();
+  turns[turns.length-1]={role:"user",content:`${RULES}\n\n${context()}\n\nUser: ${q}`};
+  try{
+    const r=await sample(turns,{cache:false,modelTier:"quick",onText:({text})=>{ txt.textContent=text; th.scrollTop=th.scrollHeight; }});
+    chat.push({role:"assistant",content:r.text.trim()}); txt.textContent=r.text.trim();
+  }catch(e){
+    chat.pop();
+    txt.textContent = e&&e.code==="not_granted" ? "The coach needs your permission to use Claude. You can allow it from this page's permissions." : e&&e.code==="rate_limited" ? "Too many messages at once. Wait a minute and try again." : "The coach couldn't answer just now. Try again.";
+  }finally{ busy=false; const s=$("#send"); if(s) s.disabled=false; }
+}
+
+/* ================= onboarding ================= */
+function onbSteps(){
+  const ending=draft.situation==="ending";
+  const drugSel=`<label class="f full" for="o-drug">Medication<select id="o-drug">${["Wegovy","Ozempic","Zepbound","Mounjaro","Compounded semaglutide","Compounded tirzepatide","Other"].map(d=>`<option ${draft.drug===d?"selected":""}>${d}</option>`).join("")}</select></label>`;
+  return [
+    `<h2>Where are you right now?</h2><p class="lead">Landing helps before and after your last dose.</p>
+     <div class="choice">
+       <label><input type="radio" name="o-sit" value="ending" ${ending?"checked":""}>My coverage is ending, and I'm still taking it</label>
+       <label><input type="radio" name="o-sit" value="stopped" ${!ending?"checked":""}>I've already stopped</label>
+     </div>`,
+    ending
+    ? `<h2>Your medication and coverage</h2><p class="lead">We use this to show what staying on would cost.</p>
+       <div class="fgrid">${drugSel}
+         <label class="f" for="o-dose">Current dose<select id="o-dose">${Object.entries(DOSE).map(([k,v])=>`<option value="${k}" ${draft.dose===k?"selected":""}>${v}</option>`).join("")}</select></label>
+         <label class="f" for="o-cov">Coverage ends<input id="o-cov" type="date" min="${todayISO()}" value="${draft.coverageEnd}"></label>
+       </div>`
+    : `<h2>Your medication</h2><p class="lead">We use this to time your plan from your last dose.</p>
+       <div class="fgrid">${drugSel}
+         <label class="f full" for="o-stop">Date of your last dose<input id="o-stop" type="date" max="${todayISO()}" value="${draft.stopDate}"></label>
+       </div>`,
+    `<h2>Your weight</h2><p class="lead">${ending?"This sets your starting point.":"Your hold zone is set from how much you lost."}</p>
+     <div class="fgrid">
+       <label class="f" for="o-start">Before you started<span class="suffix"><input id="o-start" type="number" inputmode="decimal" step="0.1" value="${draft.startWeight}"><i>lb</i></span></label>
+       <label class="f" for="o-end">${ending?"Today":"At your last dose"}<span class="suffix"><input id="o-end" type="number" inputmode="decimal" step="0.1" value="${draft.stopWeight}"><i>lb</i></span></label>
+     </div>`,
+    `<h2>A bit about you</h2><p class="lead">This shapes your plan and your coach's advice.</p>
+     ${ending?"":`<p class="hint" style="margin:0 0 8px;font-weight:500;color:var(--ink2)">Main reason you stopped</p>
+     <div class="choice">${Object.entries(REASON).map(([k,v])=>`<label><input type="radio" name="o-why" value="${k}" ${draft.reason===k?"checked":""}>${v}</label>`).join("")}</div>`}
+     <label class="f" for="o-train" style="margin-top:16px">Strength training right now<select id="o-train">${Object.entries(TRAIN).map(([k,v])=>`<option value="${k}" ${draft.training===k?"selected":""}>${v}</option>`).join("")}</select></label>`
+  ];
+}
+function onbHTML(){
+  const steps=onbSteps(), n=steps.length;
+  return `<div class="onb">
+    <section class="onb-l">
+      <div class="logo">${I.logo}<span>Landing</span></div>
+      <div style="display:flex;flex-direction:column;gap:14px"><h1>Losing your GLP-1 coverage? Land safely.</h1>
+      <p>See what staying on would really cost, decide with your prescriber, and if you stop, keep the progress you worked for.</p></div>
+      <div class="evid">
+        <div><span class="num">72→60%</span><span>of large employers covering GLP-1s for obesity, 2025 to 2026<small>Business Group on Health</small></span></div>
+        <div><span class="num">49%</span><span>stopped semaglutide for obesity within a year<small>Mailhac et al., JAMA Network Open, 2026 · 157,822 patients</small></span></div>
+        <div><span class="num">~60%</span><span>of lost weight returns within a year of stopping<small>Budini et al., eClinicalMedicine, 2026 · meta-analysis of 6 trials</small></span></div>
+      </div>
+      <div class="employer"><b>For employers:</b> changing GLP-1 coverage? Offer Landing to affected employees as a transition benefit.</div>
+    </section>
+    <section class="onb-r">
+      <div class="steps-ind">${steps.map((_,i)=>`<i class="${i<=onbStep?"on":""}"></i>`).join("")}</div>
+      <p class="hint" style="margin:0 0 6px">Step ${onbStep+1} of ${n}</p>
+      ${steps[onbStep]}
+      <p class="err" id="o-err" style="margin-top:12px"></p>
+      <div class="onb-nav">${onbStep>0?`<button class="btn sec" type="button" id="o-back">Back</button>`:"<span></span>"}<button class="btn" type="button" id="o-next">${onbStep<n-1?"Continue":"Create my plan"}</button></div>
+      <div class="onb-alt"><span>Presenting or just looking? View a sample member:</span><div class="sample-links"><button class="linkbtn" type="button" id="o-sample-on">Coverage ends in 3 weeks</button><button class="linkbtn" type="button" id="o-sample">9 weeks after stopping</button></div></div>
+      <p class="legal">Landing supports healthy habits and shows published prices. It is not medical advice and does not advise on doses, switching, tapering, or restarting medication.</p>
+    </section>
+  </div>`;
+}
+function readDraft(){
+  const g=id=>{const e=$(id);return e?e.value:null;};
+  const sit=document.querySelector('input[name="o-sit"]:checked'); if(sit) draft.situation=sit.value;
+  if($("#o-drug")) draft.drug=g("#o-drug");
+  if($("#o-dose")) draft.dose=g("#o-dose");
+  if($("#o-cov")) draft.coverageEnd=g("#o-cov");
+  if($("#o-stop")) draft.stopDate=g("#o-stop");
+  if($("#o-start")) draft.startWeight=g("#o-start");
+  if($("#o-end")) draft.stopWeight=g("#o-end");
+  const r=document.querySelector('input[name="o-why"]:checked'); if(r) draft.reason=r.value;
+  if($("#o-train")) draft.training=g("#o-train");
+}
+function bindOnb(){
+  const err=t=>{ $("#o-err").textContent=t; };
+  document.querySelectorAll('input[name="o-sit"]').forEach(r=>r.onchange=()=>{ readDraft(); });
+  $("#o-next").onclick=()=>{
+    readDraft();
+    const ending=draft.situation==="ending", n=onbSteps().length;
+    if(onbStep===1){
+      if(ending){ if(!draft.coverageEnd) return err("Enter the date your coverage ends."); if(draft.coverageEnd<todayISO()) return err("That date has passed. If you've already stopped, go back and choose \"I've already stopped.\""); }
+      else { if(!draft.stopDate) return err("Enter the date of your last dose."); if(draft.stopDate>todayISO()) return err("Your last dose date can't be in the future."); }
+    }
+    if(onbStep===2){ const a=+draft.startWeight,b=+draft.stopWeight; if(!a||!b) return err("Enter both weights."); if(a<60||b<60||a>700||b>700) return err("Enter weights in pounds."); if(b>=a) return err(ending?"Today's weight should be lower than your starting weight.":"Your weight at your last dose should be lower than your starting weight."); }
+    if(onbStep<n-1){ onbStep++; render(); return; }
+    const t=todayISO();
+    S = ending
+      ? {profile:{status:"on",drug:draft.drug,dose:draft.dose,coverageEnd:draft.coverageEnd,stopDate:draft.coverageEnd,startWeight:+draft.startWeight,stopWeight:+draft.stopWeight,reason:"coverage",training:draft.training,sample:false,created:t},weighins:[{d:t,w:+draft.stopWeight}],checks:{}}
+      : {profile:{status:"off",drug:draft.drug,dose:"maint",stopDate:draft.stopDate,startWeight:+draft.startWeight,stopWeight:+draft.stopWeight,reason:draft.reason,training:draft.training,sample:false,created:t},weighins:[{d:draft.stopDate,w:+draft.stopWeight}],checks:{}};
+    view="overview"; sel=null; save(); render();
+  };
+  const bk=$("#o-back"); if(bk) bk.onclick=()=>{ readDraft(); onbStep--; render(); };
+  $("#o-sample").onclick=()=>{
+    const stop=addDays(todayISO(),-60), ws=[184.0,184.6,185.3,185.9,185.8,186.7,187.6,188.5,188.9];
+    const checks={}; checks[todayISO()]={protein:true};
+    S={profile:{status:"off",drug:"Wegovy",dose:"maint",stopDate:stop,startWeight:228,stopWeight:184,reason:"coverage",training:"some",sample:true,created:todayISO()},
+       weighins:ws.map((w,i)=>({d:addDays(stop,i*7),w})),checks};
+    view="overview"; sel=null; save(); render();
+  };
+  $("#o-sample-on").onclick=()=>{
+    const end=addDays(todayISO(),21);
+    S={profile:{status:"on",drug:"Wegovy",dose:"maint",coverageEnd:end,stopDate:end,startWeight:228,stopWeight:186.2,reason:"coverage",training:"none",sample:true,created:todayISO()},
+       weighins:[{d:addDays(todayISO(),-14),w:187.0},{d:addDays(todayISO(),-7),w:186.6},{d:todayISO(),w:186.2}],checks:{transition:{confirm:true}}};
+    view="overview"; sel=null; save(); render();
+  };
+}
+
+boot();
+phInit();
+</script>
