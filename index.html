@@ -1,3 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Landing helps people losing GLP-1 coverage compare self-pay costs, prepare a decision with their prescriber, and keep their progress after stopping.">
+<meta name="theme-color" content="#0E5A5F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Landing">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Crect width='22' height='22' rx='5' fill='%230E5A5F'/%3E%3Cpath d='M4.5 13.5c3-4.5 6-6 13-5.5' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round'/%3E%3Cpath d='M4.5 16.5h13' stroke='white' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>html{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Landing</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
@@ -202,6 +213,24 @@ svg.chart .hit{cursor:pointer}
 .employer{margin-top:4px;padding:14px 16px;border:1px solid rgba(255,255,255,.22);border-radius:8px;font-size:13px;color:rgba(255,255,255,.82);max-width:520px}
 .employer b{color:#fff;font-weight:600}
 
+/* phone polish */
+.cond-m{display:none}
+@media (max-width:600px){
+  input,select,textarea{font-size:16px}
+  .prices th.cond,.prices td.cond{display:none}
+  .cond-m{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+  .prices th,.prices td{padding-left:12px;padding-right:12px}
+  .onb-l .evid,.onb-l .employer,.onb-l>div>p{display:none}
+  .onb-l{gap:10px;padding-block:20px}
+  .onb-l h1{font-size:24px;max-width:none}
+  .banner{font-size:12px}
+  .count>.num{font-size:36px}
+  table.hist th,table.hist td{padding-left:10px;padding-right:10px}
+  .panel-h .aside{display:none}
+  table.hist .phc{display:none}
+  .content{padding-top:14px}
+}
+
 /* history */
 table.hist{width:100%;border-collapse:collapse;font-size:14px}
 table.hist th{font-size:12px;font-weight:500;color:var(--muted);text-align:right;padding:10px 18px;background:var(--sunk);border-bottom:1px solid var(--line)}
@@ -250,6 +279,8 @@ table.hist tr:first-child td{border-top:0}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 </style>
 
+</head>
+<body>
 <div id="root"><div class="loading">Loading…</div></div>
 
 <script>
@@ -398,11 +429,11 @@ function covHTML(m){
   const best=cheapestFor(p.drug,p.dose||"maint");
   const callout = best ? `<div class="callout"><div><p class="eyebrow" style="margin:0 0 4px">Lowest listed self-pay price for ${esc(p.drug)} at your dose</p><div><span class="num">$${best.price}</span><span class="hint"> / month · ${esc(best.brand)} ${esc(best.dose)} via ${esc(best.maker)}</span></div></div><div style="text-align:right"><div class="num" style="font-size:20px">$${(best.price*12).toLocaleString()}</div><span class="hint">per year</span></div></div>`
     : `<div class="callout"><div><p class="eyebrow" style="margin:0 0 4px">${esc(p.drug)}</p><p class="prose" style="margin:0">We don't list a manufacturer self-pay price for this medication. Ask your prescriber which self-pay options below could fit you.</p></div></div>`;
-  const rows=PRICES.map(g=>`<tr class="grp"><td colspan="4">${g.brand} · ${g.maker}</td></tr>`+g.rows.map(r=>`<tr class="${g.drugs.includes(p.drug)&&r[3]===(p.dose||"maint")?"mine":""}"><td>${r[0]}</td><td class="r num">$${r[1]}</td><td class="r num">$${(r[1]*12).toLocaleString()}</td><td class="hint">${r[2]}</td></tr>`).join("")).join("");
+  const rows=PRICES.map(g=>`<tr class="grp"><td colspan="4">${g.brand} · ${g.maker}</td></tr>`+g.rows.map(r=>`<tr class="${g.drugs.includes(p.drug)&&r[3]===(p.dose||"maint")?"mine":""}"><td>${r[0]}${r[2]?`<span class="cond-m">${r[2]}</span>`:""}</td><td class="r num">$${r[1]}</td><td class="r num">$${(r[1]*12).toLocaleString()}</td><td class="hint cond">${r[2]}</td></tr>`).join("")).join("");
   return `<div class="stack">
     <section class="panel">
       ${callout}
-      <div class="tablewrap"><table class="prices"><thead><tr><th>Medication and dose</th><th class="r">Per month</th><th class="r">Per year</th><th>Conditions</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="tablewrap"><table class="prices"><thead><tr><th>Medication and dose</th><th class="r">Per month</th><th class="r">Per year</th><th class="cond">Conditions</th></tr></thead><tbody>${rows}</tbody></table></div>
       <div class="notes"><span>Self-pay prices as published in ${PRICE_ASOF}. They change often, several offers end December 31, 2026, and they don't count toward your insurance deductible. Manufacturer programs exclude Medicare, Medicaid, VA and TRICARE members. If you have Medicare, ask your plan about the Medicare GLP-1 Bridge program.</span><span>Ozempic and Mounjaro are labeled for diabetes and don't have these weight-loss self-pay prices. Landing doesn't list compounded medications. Sources: <a href="https://www.onedaymd.com/2026/10/GLP-1-cost.html" target="_blank" rel="noopener">OneDayMD price check, Oct 18, 2026</a> · <a href="https://www.affinitywholehealth.com/blog/glp-1-prices-lillydirect-trumprx-novocare-explained" target="_blank" rel="noopener">Affinity Whole Health</a>. Confirm with the manufacturer before you fill.</span></div>
     </section>
     <section class="panel">
@@ -678,9 +709,9 @@ const turnHTML=(role,txt)=>`<div class="turn"><div class="av ${role==="user"?"me
 function histHTML(m){
   const rows=m.wi.slice().reverse();
   return `<section class="panel"><div class="tablewrap"><table class="hist">
-    <thead><tr><th>Date</th><th style="text-align:left">Photo</th><th>Weight</th><th>Change</th><th>Since last dose</th><th></th></tr></thead>
+    <thead><tr><th>Date</th><th class="phc" style="text-align:left">Photo</th><th>Weight</th><th>Change</th><th>Total</th><th></th></tr></thead>
     <tbody>${rows.map((x,i)=>{const prev=rows[i+1];const d=prev?x.w-prev.w:null;const s=x.w-m.p.stopWeight;
-      const pu=photoURL(photoOn(x.d)); return `<tr><td>${fmtDate(x.d,{weekday:"short",month:"short",day:"numeric"})}</td><td style="text-align:left">${pu?`<button class="del" type="button" data-open="${x.d}" style="padding:0" aria-label="Open photo from ${fmtDate(x.d)}"><img class="thumb" src="${pu}" alt=""></button>`:`<span class="hint">—</span>`}</td><td class="num">${f1(x.w)}</td><td class="num ${d>0?"up":d<0?"down":""}">${d===null?"—":sgn(d)}</td><td class="num">${sgn(s)}</td><td>${rows.length>1?`<button class="del" type="button" data-del="${x.d}">Delete</button>`:""}</td></tr>`;}).join("")}</tbody>
+      const pu=photoURL(photoOn(x.d)); return `<tr><td style="white-space:nowrap">${fmtDate(x.d,{month:"short",day:"numeric"})}</td><td class="phc" style="text-align:left">${pu?`<button class="del" type="button" data-open="${x.d}" style="padding:0" aria-label="Open photo from ${fmtDate(x.d)}"><img class="thumb" src="${pu}" alt=""></button>`:`<span class="hint">—</span>`}</td><td class="num">${f1(x.w)}</td><td class="num ${d>0?"up":d<0?"down":""}">${d===null?"—":sgn(d)}</td><td class="num">${sgn(s)}</td><td>${rows.length>1?`<button class="del" type="button" data-del="${x.d}">Delete</button>`:""}</td></tr>`;}).join("")}</tbody>
   </table></div></section>`;
 }
 
@@ -872,3 +903,6 @@ function bindOnb(){
 boot();
 phInit();
 </script>
+
+</body>
+</html>
